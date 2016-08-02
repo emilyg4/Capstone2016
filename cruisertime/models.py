@@ -1,15 +1,15 @@
+"""
+Definition of models.
+"""
 from __future__ import unicode_literals
 from django.db import models
 from django.forms import ModelForm
 from django.utils import timezone
-#from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django import forms
 import datetime
 import time
 from django.utils.timezone import utc
-
-# include your models here 
 
 # query lists
 LOCATION_CHOICES = (
@@ -70,23 +70,6 @@ class Meetup(models.Model):
     #mpoly = models.PointField()  # GeoDjango-specific: a geometry field (PointField)
     def __str__(self):
         return self.meet_name
-
-
-#class WorldBorder(models.Model):            
-#    name = models.CharField(max_length=50)
-#    area = models.IntegerField()
-#    pop2005 = models.IntegerField('Population 2005')
-#    fips = models.CharField('FIPS Code', max_length=2)
-#    iso2 = models.CharField('2 Digit ISO', max_length=2)
-#    iso3 = models.CharField('3 Digit ISO', max_length=3)
-#    un = models.IntegerField('United Nations Code')
-#    region = models.IntegerField('Region Code')
-#    subregion = models.IntegerField('Sub-Region Code')
-#    lon = models.FloatField()
-#    lat = models.FloatField()
-#    mpoly = models.MultiPolygonField()  # GeoDjango-specific: a geometry field (MultiPolygonField), The default spatial reference system for geometry fields is WGS84 (SRID is 4326)
-#    def __str__(self):              # __unicode__ on Python 2
-#        return self.name
         
 # ModelForm classes
 class MeetupForm(ModelForm):

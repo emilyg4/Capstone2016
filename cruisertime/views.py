@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from .models import Meetup, MeetupForm
 from django.template import loader
-#from .forms import MeetupForm
 
 # include your views here
 def index(request):
@@ -54,4 +53,3 @@ def meetcreate(request):
     else:                                           # if a GET (or any other method) we'll create a blank form
         form = MeetupForm()
     return render(request, 'cruisertime/get_meetform.html', {'meetup_form': form})
-
