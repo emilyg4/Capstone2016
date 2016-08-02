@@ -32,9 +32,7 @@
     <Compile Include="cruisertime\forms.py" />
     <Compile Include="cruisertime\models.py" />
     <Compile Include="cruisertime\tests.py" />
-    <Compile Include="cruisertime\urls.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="cruisertime\urls.py" />
     <Compile Include="cruisertime\views.py" />
     <Compile Include="cruisertime\__init__.py" />
     <Compile Include="manage.py" />
