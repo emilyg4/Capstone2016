@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+{% load leaflet_tags %}
+<head>
+<title>CruiserTime: Create Meetup</title>
+<meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"/>
+<link rel="stylesheet" type="text/css" href="{% static 'cruisertime/content/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"> 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+
+<!--Using jQuery and jQuery UI for display effects-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+
+<!--Using the hamburger menu display code-->
+<script type="text/javascript" src="{% static 'cruisertime/scripts/hamburger.js' %}"></script>
+
+<!--Using Media Queries, if the viewport is smaller than 700px use another stylesheet-->
+<link rel="stylesheet" type="text/css" media="all" href="{% static 'cruisertime/content/hamburger.css' %}"/>
+
+<script type="text/javascript">
+
+function OnLocationOrListChanged()
+{
+        console.log("LocationNameChanged to: " + document.getElementById("id_location_name").value);
+        console.log("TerminalChanged to: " + document.getElementById("id_lift_terminal").value);
+
+
+        console.log("printing shit to: " + document.getElementById("id_location_name").options[document.getElementById("id_location_name").selectedIndex].label);
+        console.log("printing shit to: " + document.getElementById("id_location_name").selectedIndex);
+        console.log("printing shit to: " + document.getElementById("id_location_name").options[document.getElementById("id_location_name").selectedIndex].parentNode.label);
+        var isLift = document.getElementById("id_location_name").options[document.getElementById("id_location_name").selectedIndex].parentNode.label == "Lift";
+
+        //console.log("Lift Clicked?");
+        console.log(isLift ? "Lift selected" : "Lift NOT selected");
+
+        // if id_location_name is of type Lift 
+        var liftTerminal = document.getElementById("lift_terminal_span");
+        liftTerminal.style.display = isLift ? "block" : "none";
+
+        //read the JSON
+        myjson = getJSON();
+        loc = document.getElementById("id_location_name").value
+        term = document.getElementById("id_lift_terminal").value
+        console.log(loc)
+        //console.log(JSON.stringify(myjson));
+        //for loop <ALLCOORDS>
+        for (var i = 0; i < myjson.features.length; i++) {
+            //if terminal == " " OR term
+            if (loc == myjson.features[i].properties.value){
+                if (myjson.features[i].properties.Terminal == " " ||
+                    term == myjson.features[i].properties.Terminal) {
+                    coords = myjson.features[i].geometry.coordinates;//Get Coords
+                    document.getElementById("id_lon").value = coords[0];
+                    document.getElementById("id_lat").value = coords[1];
+                    }
+            }
+        }
+}
+    window.onload = function() 
+    { 
+         document.getElementById("id_location_name").onchange = OnLocationOrListChanged;
+         document.getElementById("id_lift_terminal").onchange = OnLocationOrListChanged;
+    };
+
+// function to fetch SPlocations
+function getJSON() {
+    return {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09194171499995,47.74489644100003]},"properties":{"FID":0,"OBJECTID":1,"Name":"Lower Parking Entrance","Terminal":" ","POINT_X":-121.091941715,"POINT_Y":47.744896441,"value":"LPE"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09456569999997,47.743745698000055]},"properties":{"FID":1,"OBJECTID":2,"Name":"Vehicle Maintenance Shed","Terminal":" ","POINT_X":-121.0945657,"POINT_Y":47.743745698,"value":"MNT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09269753699999,47.74614305000006]},"properties":{"FID":2,"OBJECTID":3,"Name":"DOT Weather Station","Terminal":" ","POINT_X":-121.092697537,"POINT_Y":47.74614305,"value":"DOT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09516251299999,47.744006375000026]},"properties":{"FID":3,"OBJECTID":4,"Name":"Everett Cabin","Terminal":" ","POINT_X":-121.095162513,"POINT_Y":47.744006375,"value":"EVT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09711148699995,47.744070306000026]},"properties":{"FID":4,"OBJECTID":5,"Name":"Penguins Cabin","Terminal":" ","POINT_X":-121.097111487,"POINT_Y":47.744070306,"value":"PNG"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09846150799996,47.74462330100005]},"properties":{"FID":5,"OBJECTID":6,"Name":"Ski Cruiser Cabin","Terminal":" ","POINT_X":-121.098461508,"POINT_Y":47.744623301,"value":"BSC"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09881327399995,47.74517309500004]},"properties":{"FID":6,"OBJECTID":7,"Name":"Swiss Cabin","Terminal":" ","POINT_X":-121.098813274,"POINT_Y":47.745173095,"value":"SWS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09852330499996,47.74552790000007]},"properties":{"FID":7,"OBJECTID":8,"Name":"Mountaineers Cabin","Terminal":" ","POINT_X":-121.098523305,"POINT_Y":47.7455279,"value":"MT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09258368799999,47.74428447200006]},"properties":{"FID":8,"OBJECTID":9,"Name":"Brooks","Terminal":"BOT","POINT_X":-121.092583688,"POINT_Y":47.744284472,"value":"BR"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09219151699994,47.74424611400008]},"properties":{"FID":9,"OBJECTID":10,"Name":"Skyline Express","Terminal":"BOT","POINT_X":-121.092191517,"POINT_Y":47.744246114,"value":"SKY"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.091642477,47.74382896800006]},"properties":{"FID":10,"OBJECTID":11,"Name":"Hogsback","Terminal":"BOT","POINT_X":-121.091642477,"POINT_Y":47.743828968,"value":"HGS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09097221999997,47.743373459000054]},"properties":{"FID":11,"OBJECTID":12,"Name":"Daisy","Terminal":"BOT","POINT_X":-121.09097222,"POINT_Y":47.743373459,"value":"DSY"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09140004299996,47.74463448900008]},"properties":{"FID":12,"OBJECTID":13,"Name":"Lift Maintenance Shed","Terminal":" ","POINT_X":-121.091400043,"POINT_Y":47.744634489,"value":"LMS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.091079176,47.74402076000007]},"properties":{"FID":13,"OBJECTID":14,"Name":"Rope Tow","Terminal":"BOT","POINT_X":-121.091079176,"POINT_Y":47.74402076,"value":"RT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09025204999994,47.74429885700005]},"properties":{"FID":14,"OBJECTID":15,"Name":"Rope Tow","Terminal":"TOP","POINT_X":-121.09025205,"POINT_Y":47.744298857,"value":"RT"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09073691699996,47.74472558900004]},"properties":{"FID":15,"OBJECTID":16,"Name":"Tye Creek Lodge","Terminal":" ","POINT_X":-121.090736917,"POINT_Y":47.744725589,"value":"TCL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08985274799994,47.74453859400006]},"properties":{"FID":16,"OBJECTID":17,"Name":"Granite Peaks Lodge","Terminal":" ","POINT_X":-121.089852748,"POINT_Y":47.744538594,"value":"GPL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09053726599995,47.74376663500004]},"properties":{"FID":17,"OBJECTID":18,"Name":"Ski and Snowboard School","Terminal":" ","POINT_X":-121.090537266,"POINT_Y":47.743766635,"value":"SKOO"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08980996599996,47.74404952800006]},"properties":{"FID":18,"OBJECTID":19,"Name":"Ski Check","Terminal":" ","POINT_X":-121.089809966,"POINT_Y":47.744049528,"value":"CHK"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08906127499995,47.74456256800005]},"properties":{"FID":19,"OBJECTID":20,"Name":"Pacific Crest Lodge","Terminal":" ","POINT_X":-121.089061275,"POINT_Y":47.744562568,"value":"PCL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08917536099994,47.74370909700008]},"properties":{"FID":20,"OBJECTID":21,"Name":"Kehr's Chair","Terminal":"BOT","POINT_X":-121.089175361,"POINT_Y":47.743709097,"value":"KRS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08946770699998,47.74509957600003]},"properties":{"FID":21,"OBJECTID":22,"Name":"Pedestrian Overpass","Terminal":" ","POINT_X":-121.089467707,"POINT_Y":47.745099576,"value":"PDO"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08871188499995,47.746777691000034]},"properties":{"FID":22,"OBJECTID":23,"Name":"Parking Operations","Terminal":" ","POINT_X":-121.088711885,"POINT_Y":47.746777691,"value":"PO"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08569572999994,47.74677289600004]},"properties":{"FID":23,"OBJECTID":24,"Name":"Stevens Pass Ski Club","Terminal":" ","POINT_X":-121.08569573,"POINT_Y":47.746772896,"value":"SPSC"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08816997599996,47.74593864000008]},"properties":{"FID":24,"OBJECTID":25,"Name":"Main Entrance","Terminal":" ","POINT_X":-121.088169976,"POINT_Y":47.74593864,"value":"ME"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08819136699998,47.74562698900007]},"properties":{"FID":25,"OBJECTID":27,"Name":"USFS Guard Station","Terminal":" ","POINT_X":-121.088191367,"POINT_Y":47.745626989,"value":"USFS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08886875399997,47.74532013100003]},"properties":{"FID":26,"OBJECTID":28,"Name":"Parking Lot A","Terminal":" ","POINT_X":-121.088868754,"POINT_Y":47.745320131,"value":"PRKA"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08737850199998,47.74547356100004]},"properties":{"FID":27,"OBJECTID":29,"Name":"Parking Lot F","Terminal":" ","POINT_X":-121.087378502,"POINT_Y":47.745473561,"value":"PRKF"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08683659199994,47.74639412600004]},"properties":{"FID":28,"OBJECTID":30,"Name":"Parking Lot E","Terminal":" ","POINT_X":-121.086836592,"POINT_Y":47.746394126,"value":"PRKE"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08496129899998,47.74722837500008]},"properties":{"FID":29,"OBJECTID":31,"Name":"Parking Lot E","Terminal":" ","POINT_X":-121.084961299,"POINT_Y":47.747228375,"value":"PRKE"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08738563299994,47.746734540000034]},"properties":{"FID":30,"OBJECTID":32,"Name":"Parking Lot B","Terminal":" ","POINT_X":-121.087385633,"POINT_Y":47.74673454,"value":"PRKB"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08785623799997,47.74734823700004]},"properties":{"FID":31,"OBJECTID":33,"Name":"Parking Lot D","Terminal":" ","POINT_X":-121.087856238,"POINT_Y":47.747348237,"value":"PRKD"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08894718799996,47.746442072000036]},"properties":{"FID":32,"OBJECTID":34,"Name":"Parking Lot C","Terminal":" ","POINT_X":-121.088947188,"POINT_Y":47.746442072,"value":"PRKC"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09588505999996,47.74417419300004]},"properties":{"FID":33,"OBJECTID":35,"Name":"Lower Trail","Terminal":"BOT","POINT_X":-121.09588506,"POINT_Y":47.744174193,"value":"LTRL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09866876499995,47.74456928100005]},"properties":{"FID":34,"OBJECTID":36,"Name":"Back Hill","Terminal":" ","POINT_X":-121.098668765,"POINT_Y":47.744569281,"value":"BH"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09852615699998,47.744785043000014]},"properties":{"FID":35,"OBJECTID":37,"Name":"Lower Trail Entrance","Terminal":"BOT","POINT_X":-121.098526157,"POINT_Y":47.744785043,"value":"LTRL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.10136357699996,47.742391465000026]},"properties":{"FID":36,"OBJECTID":38,"Name":"Upper Trail Entrance","Terminal":" ","POINT_X":-121.101363577,"POINT_Y":47.742391465,"value":"UTRL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09403115799995,47.74528752800006]},"properties":{"FID":37,"OBJECTID":39,"Name":"Lower Lot 1","Terminal":" ","POINT_X":-121.094031158,"POINT_Y":47.745287528,"value":"PRK1"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09480361699997,47.745199625000055]},"properties":{"FID":38,"OBJECTID":40,"Name":"Lower Lot 2","Terminal":" ","POINT_X":-121.094803617,"POINT_Y":47.745199625,"value":"PRK2"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09532651199998,47.744895961000054]},"properties":{"FID":39,"OBJECTID":41,"Name":"Lower Lot 3","Terminal":" ","POINT_X":-121.095326512,"POINT_Y":47.744895961,"value":"PRK3"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09658621499994,47.74453635700007]},"properties":{"FID":40,"OBJECTID":42,"Name":"Cabin Parking","Terminal":" ","POINT_X":-121.096586215,"POINT_Y":47.744536357,"value":"PRK"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09617027499996,47.74461626900006]},"properties":{"FID":41,"OBJECTID":43,"Name":"Lower Lot 4","Terminal":" ","POINT_X":-121.096170275,"POINT_Y":47.744616269,"value":"PRK4"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.099129388,47.74328970900007]},"properties":{"FID":42,"OBJECTID":44,"Name":"Lower Trail Entrance","Terminal":"TOP","POINT_X":-121.099129388,"POINT_Y":47.743289709,"value":"LTRL"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.10654697599995,47.73818679900006]},"properties":{"FID":43,"OBJECTID":45,"Name":"Brooks","Terminal":"TOP","POINT_X":-121.106546976,"POINT_Y":47.738186799,"value":"BR"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.10728853699999,47.73447508300006]},"properties":{"FID":44,"OBJECTID":46,"Name":"Skyline Express","Terminal":"TOP","POINT_X":-121.107288537,"POINT_Y":47.734475083,"value":"SKY"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09739155299996,47.736028857000065]},"properties":{"FID":45,"OBJECTID":47,"Name":"Hogsback","Terminal":"TOP","POINT_X":-121.097391553,"POINT_Y":47.736028857,"value":"HGS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.10618926799998,47.73460936200007]},"properties":{"FID":46,"OBJECTID":48,"Name":"7th Heaven","Terminal":"BOT","POINT_X":-121.106189268,"POINT_Y":47.734609362,"value":"7H"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.10332064699997,47.733613055000035]},"properties":{"FID":47,"OBJECTID":49,"Name":"7th Heaven","Terminal":"TOP","POINT_X":-121.103320647,"POINT_Y":47.733613055,"value":"7H"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09026371099998,47.73397833000007]},"properties":{"FID":48,"OBJECTID":50,"Name":"Tye Mill","Terminal":"BOT","POINT_X":-121.090263711,"POINT_Y":47.73397833,"value":"TYE"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08517379999995,47.73191693100006]},"properties":{"FID":49,"OBJECTID":51,"Name":"Jupiter","Terminal":"TOP","POINT_X":-121.0851738,"POINT_Y":47.731916931,"value":"JUP"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.09153838799994,47.738092890000075]},"properties":{"FID":50,"OBJECTID":52,"Name":"Daisy","Terminal":"TOP","POINT_X":-121.091538388,"POINT_Y":47.73809289,"value":"DSY"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08538176999997,47.73166962200003]},"properties":{"FID":51,"OBJECTID":53,"Name":"Tye Mill","Terminal":"TOP","POINT_X":-121.08538177,"POINT_Y":47.731669622,"value":"TYE"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.06973927499996,47.73101428100006]},"properties":{"FID":52,"OBJECTID":55,"Name":"Jupiter","Terminal":"BOT","POINT_X":-121.069739275,"POINT_Y":47.731014281,"value":"JUP"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.06899771399997,47.73074890200007]},"properties":{"FID":53,"OBJECTID":56,"Name":"Southern Cross","Terminal":"BOT","POINT_X":-121.068997714,"POINT_Y":47.730748902,"value":"SCR"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.07908563399996,47.738919440000075]},"properties":{"FID":54,"OBJECTID":57,"Name":"Southern Cross","Terminal":"TOP","POINT_X":-121.079085634,"POINT_Y":47.73891944,"value":"SCR"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.07921041599996,47.73912723400008]},"properties":{"FID":55,"OBJECTID":58,"Name":"Double Diamond","Terminal":"TOP","POINT_X":-121.079210416,"POINT_Y":47.739127234,"value":"DD"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08194967399998,47.74149682800004]},"properties":{"FID":56,"OBJECTID":59,"Name":"Double Diamond","Terminal":"BOT","POINT_X":-121.081949674,"POINT_Y":47.741496828,"value":"DD"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.08129605499994,47.74199630700008]},"properties":{"FID":57,"OBJECTID":60,"Name":"Kehr's Chair","Terminal":"TOP","POINT_X":-121.081296055,"POINT_Y":47.741996307,"value":"KRS"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.091097725,47.7445916935]},"properties":{"FID":58,"OBJECTID":61,"Name":"Bulls Tooth Pub","Terminal":" ","POINT_X":-121.091097725,"POINT_Y":47.7445916935,"value":"BTP"}},{"type":"Feature","geometry":{"type":"Point","coordinates":[-121.088559305,47.7444126897]},"properties":{"FID":59,"OBJECTID":62,"Name":"The Foggy Goggle","Terminal":" ","POINT_X":-121.088559305,"POINT_Y":47.7444126897,"value":"FG"}}]}
+};
+
+</script>
+
+<script>
+$(document).ready(function() {
+    $('.datepicker').datepicker();
+});
+</script>
+</head>
+
+<body>
+
+<!--This wrapping container is used to get the width of the whole content-->
+<div id="container">
+    
+    <!--The Hamburger Button in the Header-->
+    <header>
+        <div id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="headertitle">
+            <h2>Create a Meetup</h2>
+        </div>
+    </header>
+ 
+    <!--The mobile navigation Markup hidden via css-->
+    <nav>
+        <ul>
+            <li><a href="{% url 'cruisertime:index' %}">Home</a></li>
+            <li><a href="{% url 'cruisertime:meetcreate' %}">Create a Meetup</a></li>
+            <li><a href="{% url 'cruisertime:meetattend' %}">Attend a Meetup</a></li>
+            <li><a href="{% url 'cruisertime:about' %}">About</a></li>
+        </ul>
+    </nav>
+    
+    <!--The Layer that will be layed over the content
+    so that the content is unclickable while menu is shown-->
+    <div id="contentLayer"></div>
+
+    <div id="content">
+        <fieldset>
+            <h2>Enter your meetup information: </h2>
+            <meetform>
+                <form action="" method="post">
+                    {% csrf_token %}       
+                    <ul style="list-style-type:none">
+                        <li>Meetup Name: {{ meetup_form.meet_name }} {{ meetup_form.meet_name.errors }}</li>
+                        <li>Meetup Time: {{ meetup_form.meet_time }} {{ meetup_form.meet_time.errors }}</li>
+                        <li>Meetup Date: {{ meetup_form.meet_date }} {{ meetup_form.meet_date.errors }}</li>
+                        <li>Location: {{ meetup_form.location_name }} {{ meetup_form.location_name.errors }}</li>
+                        <span id="lift_terminal_span">Lift Terminal: {{ meetup_form.lift_terminal }} {{ meetup_form.lift_terminal.errors }}</span>
+                        <li>Notes: {{ meetup_form.notes_text }} {{ meetup_form.notes_text.errors }}</li>
+                        {{ meetup_form.lat }} {{ meetup_form.lat.errors }}
+                        {{ meetup_form.lon }} {{ meetup_form.lon.errors }}
+                    </ul>
+                    <input type="submit" class="button" value="Save Meetup" />
+                    <a href="{% url 'cruisertime:index' %}" class="button">Cancel</a>
+                </form>
+            </meetform>
+        </fieldset>
+    </div>
+</div>
+</body>
+</html>
+
+

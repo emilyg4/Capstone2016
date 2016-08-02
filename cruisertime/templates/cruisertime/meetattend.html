@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load leaflet_tags %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'cruisertime/content/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+<!--<script type="text/javascript" src="{% static 'cruisertime/scripts/jsonConverters.js' %}"></script> -->
+
+<html>
+    <head>
+        {% leaflet_js %}
+        {% leaflet_css %}
+        <title>CruiserTime: Attend Meetup</title>
+        <meta name="viewport" content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, user-scalable=no"/>
+        
+        <!--Using jQuery and jQuery UI for display effects-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+
+        <!--Using the hamburger menu display code-->
+        <script type="text/javascript" src="{% static 'cruisertime/scripts/hamburger.js' %}"></script>
+
+        <!--Using Media Queries, if the viewport is smaller than 700px use another stylesheet-->
+        <link rel="stylesheet" type="text/css" media="all" href="{% static 'cruisertime/content/hamburger.css' %}"/>
+    </head>
+
+<body>
+
+<!--This wrapping container is used to get the width of the whole content-->
+<div id="container">
+    
+    <!--The Hamburger Button in the Header-->
+    <header>
+        <div id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="headertitle">
+            <h2>Upcoming Meetups</h2>
+        </div>
+    </header>
+ 
+    <!--The mobile navigation Markup hidden via css-->
+    <nav>
+        <ul>
+            <li><a href="{% url 'cruisertime:index' %}">Home</a></li>
+            <li><a href="{% url 'cruisertime:meetcreate' %}">Create a Meetup</a></li>
+            <li><a href="{% url 'cruisertime:meetattend' %}">Attend a Meetup</a></li>
+            <li><a href="{% url 'cruisertime:about' %}">About</a></li>
+        </ul>
+    </nav>
+    
+    <!--The Layer that will be layed over the content
+    so that the content is unclickable while menu is shown-->
+    <div id="contentLayer"></div>
+
+    <div id="content"> 
+        <h1>Upcoming Meetups:</h1>
+
+        <!--Map of Upcoming Meetups-->
+        {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+
+        <!--List of Upcoming Meetups-->
+        <div id="upcoming">
+            {% if upcoming_meetup_list %}
+                {% for meetup in upcoming_meetup_list %} 
+                <fieldset>
+                    <h2><strong>{{ meetup.meet_name }}</strong></h2>
+                    <p>Where: {{ meetup.get_location_name_display }}</p>
+                    When: {{ meetup.meet_date }} {{ meetup.meet_time }}</p>
+                    Notes: {{ meetup.notes_text }}</p>
+                </fieldset>
+                <br>
+                {% endfor %}
+            
+            {% else %}
+                <p>No meetups are available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+
+    <script type="text/javascript">
+        //initialize map
+        function map_init_basic (map, options) {
+            var MapBox = L.tileLayer('http://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                subdomains: 'abcd',
+                id: 'emilyg4.0jemm0o8',
+                accessToken: 'pk.eyJ1IjoiZW1pbHlnNCIsImEiOiJjaXFiYjE0NWIwMGp3ZnRuZWx0ZnF1azA5In0.0PX_pZsAwzFqeGSn4HYn1g'
+            });
+        
+        //set icon 
+        var skiIcon = L.icon({
+            iconUrl: '{% static 'cruisertime/content/images/marker-icon.png' %}',
+            iconSize:     [32, 37], // size of the icon
+            iconAnchor:   [10, 44], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+        // Display upcoming meetup location
+        {% for meetup in upcoming_meetup_list %}
+            lat = {{ meetup.lat }}
+            lon = {{ meetup.lon }}
+            var marker = L.marker([lat, lon], {icon: skiIcon}).addTo(map).bindPopup("Test");
+        {% endfor %}  
+        }
+    </script>
+</html>

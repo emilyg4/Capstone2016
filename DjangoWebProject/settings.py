@@ -22,10 +22,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': path.join(PROJECT_ROOT, 'db.sqlite3'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'USER': 'emilyg4',
+        'PASSWORD': 'Tu11yD0g',
     }
 }
 
@@ -38,7 +36,7 @@ LOGIN_URL = '/login'
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Los_Angeles'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -121,6 +119,7 @@ TEMPLATE_DIRS = (
     # "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+#    os.path.join(BASE_DIR, "Templates"),
 )
 
 INSTALLED_APPS = (
@@ -130,9 +129,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app',
+    'cruisertime',
+    'leaflet',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
@@ -165,6 +165,20 @@ LOGGING = {
         },
     }
 }
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (47.737725589, -121.090736917),
+    'DEFAULT_ZOOM': 14,
+    'MIN_ZOOM': 3,
+    'MAX_ZOOM': 18,
+    'TILES': 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+}
+
+# other tiles
+# 'TILES': 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+# 'TILES': 'http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg'
+# 'TILES': 'https://api.tiles.mapbox.com/v4/emilyg4.0jemm0o8/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZW1pbHlnNCIsImEiOiJjaXFiYjE0NWIwMGp3ZnRuZWx0ZnF1azA5In0.0PX_pZsAwzFqeGSn4HYn1g',
+# 'TILES': 'http://dev.virtualearth.net/REST/v1/Imagery/Map/imagerySet/centerPoint/zoomLevel?mapSize=mapSize&pushpin=pushpin&mapLayer=mapLayer&format=format&mapMetadata=mapMetadata&key=Auio6M1uHqMWscFhSwwK9GvSSnhxsv-aU9ybXyVYnMvuSoiv5BjwsDFojTyydDUv'
 
 # Specify the default test runner.
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
