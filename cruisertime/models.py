@@ -56,12 +56,20 @@ TERMINAL_CHOICES = (
     ('BOT', 'Bottom'),
 )
 
+def IsLiftLocation(locationName):
+    for locationTypeKey, locationListVal in LOCATION_CHOICES:
+        if locationTypeKey == 'Lift':
+            for key, val in locationListVal:
+                if key == locationName:
+                    return True
+    return False
+
 # model classes
 class Meetup(models.Model):
     meet_date = models.DateField(auto_now=False, auto_now_add=False, default=datetime.date.today())
     meet_time = models.TimeField(auto_now=False, auto_now_add=False, default=datetime.datetime.now().strftime('%H:%M:%S'))
-    location_name = models.CharField(max_length=200, choices=LOCATION_CHOICES, default="BR")
-    lift_terminal = models.CharField(max_length=200, blank=True, choices=TERMINAL_CHOICES, default=" ")
+    lift_terminal = models.CharField(max_length=200, blank=True, choices=TERMINAL_CHOICES)
+    location_name = models.CharField(max_length=200, choices=LOCATION_CHOICES)
     notes_text = models.CharField(max_length=200, default="Let's meetup!")
     meet_name = models.CharField(max_length=200, default="New Meetup")	
     create_date = models.DateTimeField(auto_now_add=True)
@@ -83,6 +91,22 @@ class MeetupForm(ModelForm):
             'meet_date': forms.DateInput(attrs={'class':'datepicker'}),
             }
         fields = ['meet_date', 'meet_time', 'location_name', 'meet_name', 'lift_terminal', 'notes_text', 'lat', 'lon']
+    def clean_lift_terminal(self):
+        location = self.data.get('location_name')
+        terminal = self.cleaned_data['lift_terminal']
+        if (IsLiftLocation(location)):
+            if not terminal:
+                raise ValidationError("Location is a lift. Must supply Terminal.")
+        return terminal
+    #def clean(self):
+    #    cleaned_data = super(MeetupForm, self).clean()
+    #    location = cleaned_data['location_name']
+    #    terminal = cleaned_data['lift_terminal']
+    #    #do your cleaning here
+    #    if (IsLiftLocation(location)):
+    #        if not terminal:
+    #            raise ValidationError("Location is a lift. Must supply Terminal.")
+    #    return cleaned_data
     def clean_meet_date(self):
         date = self.cleaned_data['meet_date']
         if date < datetime.date.today():

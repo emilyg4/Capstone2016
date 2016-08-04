@@ -64,7 +64,7 @@
         <!--List of Upcoming Meetups-->
         <div id="upcoming">
             {% if upcoming_meetup_list %}
-                {% for meetup in upcoming_meetup_list %} 
+                {% for meetup in upcoming_meetup_list %}
                 <fieldset>
                     <h2><strong>{{ meetup.meet_name }}</strong></h2>
                     <p>Where: {{ meetup.get_location_name_display }}</p>

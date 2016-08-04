@@ -6,6 +6,8 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from .models import Meetup, MeetupForm
 from django.template import loader
+import datetime
+
 
 # include your views here
 def index(request):
@@ -29,7 +31,7 @@ def meetdetail(request):
 
 def meetattend(request):
     #latest_meetup_list = Meetup.objects.order_by('-create_date')[:1]
-    upcoming_meetup_list = Meetup.objects.order_by('meet_date')[:5]
+    upcoming_meetup_list = Meetup.objects.exclude(meet_date__lt=datetime.datetime.now()).order_by('meet_date')[:5]
     all_meetups = Meetup.objects.all()
     template = loader.get_template('cruisertime/meetattend.html')
     context = {
