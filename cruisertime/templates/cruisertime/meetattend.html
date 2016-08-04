@@ -104,7 +104,8 @@
         {% for meetup in upcoming_meetup_list %}
             lat = {{ meetup.lat }}
             lon = {{ meetup.lon }}
-            var marker = L.marker([lat, lon], {icon: skiIcon}).addTo(map).bindPopup("Test");
+            name = '{{ meetup.meet_name }} - {{meetup.meet_date}}'
+            var marker = L.marker([lat, lon], {icon: skiIcon}).addTo(map).bindPopup(name);
         {% endfor %}  
         }
     </script>

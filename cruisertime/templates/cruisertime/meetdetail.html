@@ -105,10 +105,11 @@
     {% for meetup in latest_meetup_list %}
         lat = {{ meetup.lat }}
         lon = {{ meetup.lon }}
+        name = '{{ meetup.meet_name }} - {{meetup.meet_date}}'
         var marker = L.marker([lat, lon], {icon: skiIcon}).addTo(map);
         var popup = L.popup()
             .setLatLng([lat, lon])
-            .setContent("Your New Meetup");
+            .setContent(name);
             //.openOn(map);
     {% endfor %}      
 }
